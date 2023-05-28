@@ -1,8 +1,25 @@
-import React from "react";
+import React, { useRef } from "react";
 import { Button, Container, Form } from "react-bootstrap";
 import classes from "./expense.module.css";
 
 const Expenses = () => {
+  const categoryRef = useRef();
+  const descRef = useRef();
+  const amountRef = useRef();
+  const submitHandler = (event) => {
+    event.preventDefault();
+    const inputCategory = categoryRef.current.value;
+    const inputDesc = descRef.current.value;
+    const inputAmount = +amountRef.current.value;
+
+    const expense = {
+      amount: inputAmount,
+      description: inputDesc,
+      category: inputCategory,
+    };
+
+    console.log(expense);
+  };
   const dummyExpense = [
     {
       amount: "44",
@@ -20,17 +37,27 @@ const Expenses = () => {
     <React.Fragment>
       <div className={classes.container}>
         <h1 className={classes.heading}>Add Expense</h1>
-        <Form className={classes.form}>
+        <Form className={classes.form} onSubmit={submitHandler}>
           <Form.Label className={classes.label}>Amount:</Form.Label>
-          <Form.Control type="number" min="0" className={classes.input} />
+          <Form.Control
+            type="number"
+            min="0"
+            className={classes.input}
+            ref={amountRef}
+          />
 
           <Form.Label className={classes.label}>Description:</Form.Label>
-          <Form.Control type="text" className={classes.input} />
+          <Form.Control type="text" className={classes.input} ref={descRef} />
 
           <Form.Label className={classes.label}>Category:</Form.Label>
-          <Form.Control type="text" className={classes.input} />
+          <Form.Select ref={categoryRef}>
+            <option>Select Category</option>
+            <option value="food">Food</option>
+            <option value="travel">Travel</option>
+            <option value="health">Health</option>
+          </Form.Select>
 
-          <Button variant="dark" className={classes.button}>
+          <Button variant="dark" className={classes.button} type="submit">
             Submit
           </Button>
         </Form>
