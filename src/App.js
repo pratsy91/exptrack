@@ -4,6 +4,7 @@ import Root from "./pages/Root";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Home from "./pages/Home";
 import Expenses from "./pages/expense";
+import Auth from "./pages/Auth";
 
 const router = createBrowserRouter([
   {
@@ -14,6 +15,10 @@ const router = createBrowserRouter([
       {
         path: "expenses",
         element: <Expenses />,
+      },
+      {
+        path: "/auth",
+        element: <Auth />,
       },
     ],
   },

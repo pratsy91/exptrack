@@ -1,8 +1,13 @@
 import { Badge, Button, Nav, Navbar } from "react-bootstrap";
 import classes from "./Header.module.css";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 
 const Header = () => {
+  const navigate = useNavigate();
+
+  const loginHandler = () => {
+    navigate("/auth?mode=login");
+  };
   return (
     <Navbar className={classes.navbar} expand="lg" variant="dark">
       <Navbar.Brand>
@@ -22,7 +27,11 @@ const Header = () => {
         </Nav>
 
         <Nav>
-          <Button className={classes.button} variant="dark">
+          <Button
+            className={classes.button}
+            variant="dark"
+            onClick={loginHandler}
+          >
             Login
           </Button>
         </Nav>
