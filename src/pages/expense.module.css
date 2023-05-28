@@ -1,0 +1,81 @@
+.container {
+  margin-top: 10rem;
+  background-color: whitesmoke;
+  margin-inline: auto;
+  border-radius: 1rem;
+  max-width: 20rem;
+  margin-bottom: 5rem;
+}
+
+.expensesContainer {
+  background-color: whitesmoke;
+  margin-inline: auto;
+  max-width: 50rem;
+  margin-bottom: 5rem;
+  border-radius: 0.2rem;
+}
+
+.label {
+  margin-right: 1rem;
+  font-size: 1.5rem;
+}
+
+.heading {
+  padding: 1rem;
+}
+.expHeading {
+  font-weight: bolder;
+  margin: 0;
+  list-style-type: none;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding-top: 1rem;
+}
+
+.input {
+  margin-right: 1rem;
+  margin-bottom: 1rem;
+  padding: 0.5rem;
+  outline: 0;
+}
+
+.form {
+  padding: 2rem;
+}
+
+.button {
+  margin-top: 2rem;
+}
+
+.category {
+  font-weight: bold;
+  font-size: 2rem;
+}
+.expButton {
+  margin-right: 1rem;
+}
+
+.listItems {
+  padding: 0;
+  margin: 0;
+}
+
+.listItem {
+  list-style-type: none;
+  padding: 1rem;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  font-size: 1rem;
+}
+
+.spanele {
+  margin-right: 1rem;
+}
+
+@media (max-width: 37.5rem) {
+  .expensesContainer {
+    margin-inline: 1rem;
+  }
+}

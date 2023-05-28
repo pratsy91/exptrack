@@ -1,0 +1,21 @@
+.navbar {
+  background-color: #58036d;
+}
+
+.badge {
+  margin-left: 2rem;
+}
+
+.links {
+  margin-inline: auto;
+}
+
+.link {
+  margin-right: 1rem;
+  text-decoration: none;
+  color: aliceblue;
+}
+
+.link:hover {
+  color: yellow;
+}
