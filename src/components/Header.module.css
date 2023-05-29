@@ -19,3 +19,7 @@
 .link:hover {
   color: yellow;
 }
+
+.loginButton {
+  margin-left: auto;
+}

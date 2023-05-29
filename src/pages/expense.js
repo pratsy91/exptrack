@@ -1,11 +1,24 @@
-import React, { useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import { Button, Container, Form } from "react-bootstrap";
 import classes from "./expense.module.css";
+import { useDispatch, useSelector } from "react-redux";
+import { delExpense, getExpense, postExpense } from "../store/fetchRequests";
 
 const Expenses = () => {
   const categoryRef = useRef();
   const descRef = useRef();
   const amountRef = useRef();
+  const dispatch = useDispatch();
+  const expenses = useSelector((state) => state.expenseReducer.expenses);
+
+  useEffect(() => {
+    dispatch(getExpense());
+  }, []);
+
+  const deleteHandler = (id) => {
+    dispatch(delExpense(id));
+  };
+
   const submitHandler = (event) => {
     event.preventDefault();
     const inputCategory = categoryRef.current.value;
@@ -17,8 +30,13 @@ const Expenses = () => {
       description: inputDesc,
       category: inputCategory,
     };
-
     console.log(expense);
+
+    dispatch(postExpense(expense));
+
+    categoryRef.current.value = "";
+    descRef.current.value = "";
+    amountRef.current.value = "";
   };
   const dummyExpense = [
     {
@@ -65,9 +83,9 @@ const Expenses = () => {
 
       <div className={classes.expensesContainer}>
         <ul className={classes.listItems}>
-          {dummyExpense.map((expense) => (
+          {expenses.map((expense) => (
             <div>
-              <li className={classes.listItem}>
+              <li className={classes.listItem} key={expense.id}>
                 <div>
                   <div className={classes.category}>{expense.category}</div>
                   <span className={classes.spanele}>
@@ -83,6 +101,7 @@ const Expenses = () => {
                     variant="danger"
                     size="sm"
                     className={classes.expButton}
+                    onClick={() => deleteHandler(expense.id)}
                   >
                     Delete
                   </Button>

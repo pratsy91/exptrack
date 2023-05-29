@@ -1,11 +1,14 @@
 import { Badge, Button, Nav, Navbar } from "react-bootstrap";
 import classes from "./Header.module.css";
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink, useNavigate, useRouteLoaderData } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const Header = () => {
   const navigate = useNavigate();
+  const token = useRouteLoaderData("token");
 
-  const loginHandler = () => {
+  const logoutHandler = () => {
+    localStorage.removeItem("token");
     navigate("/auth?mode=login");
   };
   return (
@@ -17,23 +20,28 @@ const Header = () => {
       </Navbar.Brand>
       <Navbar.Toggle aria-controls="responsive-navbar-nav" />
       <Navbar.Collapse id="responsive-navbar-nav">
-        <Nav className={classes.links}>
-          <NavLink to="/" className={classes.link}>
-            Home
-          </NavLink>
-          <NavLink to="/expenses" className={classes.link}>
-            Expenses
-          </NavLink>
-        </Nav>
+        {token && (
+          <Nav className={classes.links}>
+            <NavLink to="/" className={classes.link}>
+              Home
+            </NavLink>
+            <NavLink to="/expenses" className={classes.link}>
+              Expenses
+            </NavLink>
+          </Nav>
+        )}
 
-        <Nav>
-          <Button
-            className={classes.button}
-            variant="dark"
-            onClick={loginHandler}
-          >
-            Login
-          </Button>
+        <Nav className={classes.loginButton}>
+          {token && (
+            <Button variant="dark" onClick={logoutHandler}>
+              Logout
+            </Button>
+          )}
+          {!token && (
+            <NavLink to="/auth?mode=login">
+              <Button variant="dark">Login</Button>
+            </NavLink>
+          )}
         </Nav>
       </Navbar.Collapse>
     </Navbar>

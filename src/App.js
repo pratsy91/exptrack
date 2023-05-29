@@ -4,12 +4,15 @@ import Root from "./pages/Root";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Home from "./pages/Home";
 import Expenses from "./pages/expense";
-import Auth from "./pages/Auth";
+import Auth, { authAction } from "./pages/Auth";
+import { tokenLoader } from "./store/fetchRequests";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <Root />,
+    id: "token",
+    loader: tokenLoader,
     children: [
       { index: true, element: <Home /> },
       {
@@ -19,6 +22,7 @@ const router = createBrowserRouter([
       {
         path: "/auth",
         element: <Auth />,
+        action: authAction,
       },
     ],
   },
