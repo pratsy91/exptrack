@@ -30,7 +30,7 @@ const Expenses = () => {
       description: inputDesc,
       category: inputCategory,
     };
-    console.log(expense);
+   
 
     dispatch(postExpense(expense));
 
@@ -38,18 +38,7 @@ const Expenses = () => {
     descRef.current.value = "";
     amountRef.current.value = "";
   };
-  const dummyExpense = [
-    {
-      amount: "44",
-      description: "Suez",
-      category: "Fuel",
-    },
-    {
-      amount: "24",
-      description: "Los",
-      category: "Food",
-    },
-  ];
+  
 
   return (
     <React.Fragment>

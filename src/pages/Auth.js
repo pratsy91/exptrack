@@ -10,35 +10,14 @@ import {
 } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { logIn, signUp } from "../store/fetchRequests";
-import useFetch from "../store/fetchHook";
 import { Form } from "react-router-dom";
 
 const Auth = () => {
   const [searchParams] = useSearchParams();
-  const { post } = useFetch("http://localhost:5000/user");
-  // const emailRef = useRef();
-  // const passRef = useRef();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const token = useRouteLoaderData("token");
   const islogin = searchParams.get("mode") === "login";
-  // const isLoggedin = useSelector((state) => state.authReducer.isLoggedin);
-  // const isSignedup = useSelector((state) => state.authReducer.isSignedup);
-
-  // const submitHandler = (event) => {
-  //   event.preventDefault();
-  //   const emailInput = emailRef.current.value;
-  //   const passInput = passRef.current.value;
-  //   if (islogin) {
-  //     post("/login", { email: emailInput, password: passInput }).then(
-  //       (data) => {
-  //         const token = data.token;
-  //         localStorage.setItem("token", token);
-  //       }
-  //     );
-  //   } else {
-  //   }
-  // };
 
   return (
     <React.Fragment>
