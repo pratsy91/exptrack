@@ -2,7 +2,14 @@ import React, { useEffect, useRef } from "react";
 import { Button, Container, Form } from "react-bootstrap";
 import classes from "./expense.module.css";
 import { useDispatch, useSelector } from "react-redux";
-import { delExpense, getExpense, postExpense } from "../store/fetchRequests";
+import {
+  delExpense,
+  getExpense,
+  getToken,
+  postExpense,
+} from "../store/fetchRequests";
+import LeaderBoard from "./LeaderBoard";
+import axios from 'axios';
 
 const Expenses = () => {
   const categoryRef = useRef();
@@ -30,7 +37,6 @@ const Expenses = () => {
       description: inputDesc,
       category: inputCategory,
     };
-   
 
     dispatch(postExpense(expense));
 
@@ -38,10 +44,48 @@ const Expenses = () => {
     descRef.current.value = "";
     amountRef.current.value = "";
   };
-  
+
+  const premiumHandler = async (event) => {
+    const token = getToken();
+    const response = await fetch(
+      "http://localhost:5000/purchase/premiummembership",
+      { headers: { "Authorization": token } }
+    );
+    console.log(response)
+    const data = await response.json();
+    var options = {
+      key: data.key_id,
+      order_id: data.order.id,
+      handler: async function (response) {
+        console.log(response);
+        const res = await fetch("http://localhost:5000/purchase/updatetransactionstatus",
+        {
+          method:"POST",
+          headers: {  "Content-Type": "application/json", "Authorization": token },
+          body:JSON.stringify({
+            order_id:options.order_id,
+            payment_id: response.razorpay_payment_id,}),
+        });
+        alert('You are a Premium User Now');
+        const data = await res.json();
+         if(data.success){
+          
+         }
+        
+      },
+    };
+    const rzp1 = new Razorpay(options);
+    rzp1.open();
+    event.preventDefault();
+
+    rzp1.on("payment.failed", function (response) {
+      alert("Something went wrong!");
+    });
+  };
 
   return (
     <React.Fragment>
+      <LeaderBoard className={classes.leader} />
       <div className={classes.container}>
         <h1 className={classes.heading}>Add Expense</h1>
         <Form className={classes.form} onSubmit={submitHandler}>
@@ -69,6 +113,10 @@ const Expenses = () => {
           </Button>
         </Form>
       </div>
+
+      <Button variant="info" onClick={premiumHandler}>
+        Become a Premium User
+      </Button>
 
       <div className={classes.expensesContainer}>
         <ul className={classes.listItems}>

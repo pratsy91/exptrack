@@ -69,8 +69,13 @@ export const getExpense = (expense) => {
 export const delExpense = (id) => {
   return async (dispatch) => {
     const sendRequest = async () => {
+      const token = getToken();
       const response = await fetch(
-        `http://localhost:5000/expense/del-expense/${id}`
+        `http://localhost:5000/expense/del-expense/${id}`,{
+          headers:{
+            "Authorization": token,
+          }
+        }
       );
       return response;
     };
