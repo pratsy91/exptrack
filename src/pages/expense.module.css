@@ -1,5 +1,5 @@
 .container {
-  margin-top: 10rem;
+  margin-top: 1rem;
   background-color: whitesmoke;
   margin-inline: auto;
   border-radius: 1rem;
@@ -24,6 +24,10 @@
 .heading {
   padding: 1rem;
 }
+.subscription{
+  margin-top: 10rem;
+  color: red;
+}
 .expHeading {
   font-weight: bolder;
   margin: 0;
@@ -47,6 +51,10 @@
 
 .button {
   margin-top: 2rem;
+}
+
+.premiumButton{
+  margin-bottom: 2rem;
 }
 
 .category {

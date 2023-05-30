@@ -27,6 +27,9 @@ const Auth = () => {
 
       <div className={classes.container}>
         <Form className={classes.form} method="POST">
+          <label className={classes.label}>Name:</label>
+          <input type="name" className={classes.input} name="name" />
+
           <label className={classes.label}>Email:</label>
           <input type="email" className={classes.input} name="email" />
 
@@ -66,6 +69,7 @@ export async function authAction({ request }) {
   const mode = searchParams.get("mode");
   const formData = await request.formData();
   const user = {
+    name: formData.get("name"),
     email: formData.get("email"),
     password: formData.get("password"),
   };
@@ -74,26 +78,40 @@ export async function authAction({ request }) {
 
   if (mode === "login") {
     url = "http://localhost:5000/user/login";
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        name: user.name,
+        email: user.email,
+        password: user.password,
+      }),
+    });
+    const data = await response.json();
+    const token = data.token;
+  if(data.user){
+    let isPremium = data.user.ispremiumuser;
+  localStorage.setItem("isPremium", isPremium);
+  }
+  localStorage.setItem("token", token);
+  return redirect("/");
   } else {
     url = "http://localhost:5000/user/signup";
-  }
-
-  const response = await fetch(url, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      email: user.email,
-      password: user.password,
-    }),
-  });
-  const data = await response.json();
-  const token = data.token;
-  localStorage.setItem("token", token);
-  if (mode === "login") {
-    return redirect("/");
-  } else {
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        name: user.name,
+        email: user.email,
+        password: user.password,
+      }),
+    });
+    const data = await response.json();
     return redirect("/auth?mode=login");
   }
+
 }

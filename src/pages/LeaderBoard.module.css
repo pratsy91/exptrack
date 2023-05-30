@@ -1,3 +1,18 @@
 .button{
   margin-top: 5rem;
+  margin-bottom: 2rem;
+}
+
+.leadersContainer{
+  margin-inline: auto;
+  max-width: 30rem;
+  background-color: whitesmoke;
+  border-radius: 0.2rem;
+}
+.spanItem{
+  display: flex;
+  justify-content: space-around;
+}
+.listItem{
+  padding: 0.5rem;
 }

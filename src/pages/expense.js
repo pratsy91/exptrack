@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Button, Container, Form } from "react-bootstrap";
 import classes from "./expense.module.css";
 import { useDispatch, useSelector } from "react-redux";
@@ -10,13 +10,16 @@ import {
 } from "../store/fetchRequests";
 import LeaderBoard from "./LeaderBoard";
 import axios from 'axios';
+import { useNavigate } from "react-router-dom";
 
 const Expenses = () => {
+  const navigate = useNavigate();
   const categoryRef = useRef();
   const descRef = useRef();
   const amountRef = useRef();
   const dispatch = useDispatch();
   const expenses = useSelector((state) => state.expenseReducer.expenses);
+  const isPremium = useSelector((state) => state.premiumReducer.isPremium);
 
   useEffect(() => {
     dispatch(getExpense());
@@ -53,10 +56,11 @@ const Expenses = () => {
     );
     console.log(response)
     const data = await response.json();
+    console.log(data)
     var options = {
-      key: data.key_id,
-      order_id: data.order.id,
-      handler: async function (response) {
+      "key": data.key_id,
+      "order_id": data.order.id,
+      "handler": async function (response) {
         console.log(response);
         const res = await fetch("http://localhost:5000/purchase/updatetransactionstatus",
         {
@@ -67,11 +71,9 @@ const Expenses = () => {
             payment_id: response.razorpay_payment_id,}),
         });
         alert('You are a Premium User Now');
-        const data = await res.json();
-         if(data.success){
-          
-         }
-        
+        localStorage.removeItem("ispremium");
+        localStorage.removeItem("token")
+        navigate("/auth?mode=login");
       },
     };
     const rzp1 = new Razorpay(options);
@@ -85,7 +87,8 @@ const Expenses = () => {
 
   return (
     <React.Fragment>
-      <LeaderBoard className={classes.leader} />
+      {isPremium && <LeaderBoard />}
+      <h5 className={classes.subscription}>User Subscription: {isPremium?"Premium":"Normal"}</h5>
       <div className={classes.container}>
         <h1 className={classes.heading}>Add Expense</h1>
         <Form className={classes.form} onSubmit={submitHandler}>
@@ -114,15 +117,16 @@ const Expenses = () => {
         </Form>
       </div>
 
-      <Button variant="info" onClick={premiumHandler}>
+      <div className={classes.premiumButton}> <Button variant="info" onClick={premiumHandler} hidden={isPremium}>
         Become a Premium User
-      </Button>
-
+      </Button></div>
+      
       <div className={classes.expensesContainer}>
+     
         <ul className={classes.listItems}>
           {expenses.map((expense) => (
-            <div>
-              <li className={classes.listItem} key={expense.id}>
+            <div key={expense.id}>
+              <li className={classes.listItem} >
                 <div>
                   <div className={classes.category}>{expense.category}</div>
                   <span className={classes.spanele}>

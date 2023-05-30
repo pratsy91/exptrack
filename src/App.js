@@ -6,6 +6,7 @@ import Home from "./pages/Home";
 import Expenses from "./pages/expense";
 import Auth, { authAction } from "./pages/Auth";
 import { tokenLoader } from "./store/fetchRequests";
+import ForgotPassword from "./pages/forgotpPassword";
 
 const router = createBrowserRouter([
   {
@@ -18,6 +19,10 @@ const router = createBrowserRouter([
       {
         path: "expenses",
         element: <Expenses />,
+      },
+      {
+        path:"forget-password",
+        element:<ForgotPassword />,
       },
       {
         path: "/auth",

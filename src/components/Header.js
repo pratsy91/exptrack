@@ -9,6 +9,7 @@ const Header = () => {
 
   const logoutHandler = () => {
     localStorage.removeItem("token");
+    localStorage.removeItem("isPremium")
     navigate("/auth?mode=login");
   };
   return (

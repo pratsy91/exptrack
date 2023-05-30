@@ -1,6 +1,7 @@
 import { redirect } from "react-router-dom";
 import { expenseActions } from "./expenseSlice";
-import { authActions } from "./AuthSlice";
+import { leaderActions } from "./leaderSlice";
+
 
 export function getToken() {
   const token = localStorage.getItem("token");
@@ -85,6 +86,29 @@ export const delExpense = (id) => {
         const data = await response.json();
         console.log(data);
         dispatch(getExpense());
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+};
+
+export const getLeaders = (expense) => {
+  return async (dispatch) => {
+    const token = getToken();
+    const sendRequest = async () => {
+      const response = await fetch("http://localhost:5000/premium/showLeaderBoard",{
+      headers:{
+        "Authorization": token,
+      }
+    });
+      return response;
+    };
+    try {
+      const response = await sendRequest();
+      if (response.ok) {
+        const data = await response.json();
+         dispatch(leaderActions.setExpense({leaders:data}));
       }
     } catch (error) {
       console.log(error);
