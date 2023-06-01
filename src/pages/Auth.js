@@ -91,12 +91,8 @@ export async function authAction({ request }) {
     });
     const data = await response.json();
     const token = data.token;
-  if(data.user){
-    let isPremium = data.user.ispremiumuser;
-  localStorage.setItem("isPremium", isPremium);
-  }
-  localStorage.setItem("token", token);
-  return redirect("/");
+    localStorage.setItem("token", token);
+    return redirect("/");
   } else {
     url = "http://localhost:5000/user/signup";
     const response = await fetch(url, {
@@ -113,5 +109,4 @@ export async function authAction({ request }) {
     const data = await response.json();
     return redirect("/auth?mode=login");
   }
-
 }

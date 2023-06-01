@@ -1,16 +1,17 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Button, Container, Form } from "react-bootstrap";
+import { Button, Container, Form, Pagination } from "react-bootstrap";
 import classes from "./expense.module.css";
 import { useDispatch, useSelector } from "react-redux";
 import {
   delExpense,
   getExpense,
   getToken,
+  parseJwt,
   postExpense,
 } from "../store/fetchRequests";
 import LeaderBoard from "./LeaderBoard";
-import axios from 'axios';
-import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { useNavigate, useRouteLoaderData } from "react-router-dom";
 
 const Expenses = () => {
   const navigate = useNavigate();
@@ -18,8 +19,24 @@ const Expenses = () => {
   const descRef = useRef();
   const amountRef = useRef();
   const dispatch = useDispatch();
-  const expenses = useSelector((state) => state.expenseReducer.expenses);
-  const isPremium = useSelector((state) => state.premiumReducer.isPremium);
+  const token = useRouteLoaderData("token");
+  const tokenBody = parseJwt(token);
+  const [isPremium, setisPremium] = useState(tokenBody.isPremium);
+  let expenses = useSelector((state) => state.pageReducer.pageData.expenses);
+  const pagedata = useSelector((state) => state.pageReducer.pageData);
+
+  let pages = [];
+  console.log(expenses);
+  if (expenses == undefined) {
+    expenses = [];
+  }
+  if (pagedata.last_page > 1) {
+    for (let i = 1; i <= pagedata.last_page; i++) {
+      pages.push(i);
+    }
+  }
+
+  console.log(pages);
 
   useEffect(() => {
     dispatch(getExpense());
@@ -54,26 +71,34 @@ const Expenses = () => {
       "http://localhost:5000/purchase/premiummembership",
       { headers: { "Authorization": token } }
     );
-    console.log(response)
+    console.log(response);
     const data = await response.json();
-    console.log(data)
+    console.log(data);
     var options = {
-      "key": data.key_id,
-      "order_id": data.order.id,
-      "handler": async function (response) {
+      key: data.key_id,
+      order_id: data.order.id,
+      handler: async function (response) {
         console.log(response);
-        const res = await fetch("http://localhost:5000/purchase/updatetransactionstatus",
-        {
-          method:"POST",
-          headers: {  "Content-Type": "application/json", "Authorization": token },
-          body:JSON.stringify({
-            order_id:options.order_id,
-            payment_id: response.razorpay_payment_id,}),
-        });
-        alert('You are a Premium User Now');
-        localStorage.removeItem("ispremium");
-        localStorage.removeItem("token")
-        navigate("/auth?mode=login");
+        const res = await fetch(
+          "http://localhost:5000/purchase/updatetransactionstatus",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+             "Authorization": token,
+            },
+            body: JSON.stringify({
+              order_id: options.order_id,
+              payment_id: response.razorpay_payment_id,
+            }),
+          }
+        );
+        alert("You are a Premium User Now");
+        const data = await res.json();
+        localStorage.setItem("token", data.token);
+        const premiumToken = getToken();
+        const tokenBody = parseJwt(premiumToken);
+        setisPremium(tokenBody.isPremium);
       },
     };
     const rzp1 = new Razorpay(options);
@@ -85,10 +110,16 @@ const Expenses = () => {
     });
   };
 
+  const pageHandler = (page) => {
+    dispatch(getExpense(page));
+  };
+
   return (
     <React.Fragment>
       {isPremium && <LeaderBoard />}
-      <h5 className={classes.subscription}>User Subscription: {isPremium?"Premium":"Normal"}</h5>
+      <h5 className={classes.subscription}>
+        User Subscription: {isPremium ? "Premium" : "Normal"}
+      </h5>
       <div className={classes.container}>
         <h1 className={classes.heading}>Add Expense</h1>
         <Form className={classes.form} onSubmit={submitHandler}>
@@ -117,49 +148,68 @@ const Expenses = () => {
         </Form>
       </div>
 
-      <div className={classes.premiumButton}> <Button variant="info" onClick={premiumHandler} hidden={isPremium}>
-        Become a Premium User
-      </Button></div>
-      
-      <div className={classes.expensesContainer}>
-     
-        <ul className={classes.listItems}>
-          {expenses.map((expense) => (
-            <div key={expense.id}>
-              <li className={classes.listItem} >
-                <div>
-                  <div className={classes.category}>{expense.category}</div>
-                  <span className={classes.spanele}>
-                    &#8377;{`${expense.amount}`}
-                  </span>
-                  <span className={classes.spanele}>
-                    {`description: ${expense.description}`}
-                  </span>
-                </div>
-
-                <div>
-                  <Button
-                    variant="danger"
-                    size="sm"
-                    className={classes.expButton}
-                    onClick={() => deleteHandler(expense.id)}
-                  >
-                    Delete
-                  </Button>
-                  <Button
-                    variant="dark"
-                    size="sm"
-                    className={classes.expButton}
-                  >
-                    Edit
-                  </Button>
-                </div>
-              </li>
-              <hr />
-            </div>
-          ))}
-        </ul>
+      <div className={classes.premiumButton}>
+        <Button variant="info" onClick={premiumHandler} hidden={isPremium}>
+          Become a Premium User
+        </Button>
       </div>
+
+      {expenses && (
+        <div className={classes.expensesContainer}>
+          <ul className={classes.listItems}>
+            {expenses.map((expense) => (
+              <div key={expense.id}>
+                <li className={classes.listItem}>
+                  <div>
+                    <div className={classes.category}>{expense.category}</div>
+                    <span className={classes.spanele}>
+                      &#8377;{`${expense.amount}`}
+                    </span>
+                    <span className={classes.spanele}>
+                      {`description: ${expense.description}`}
+                    </span>
+                  </div>
+
+                  <div>
+                    <Button
+                      variant="danger"
+                      size="sm"
+                      className={classes.expButton}
+                      onClick={() => deleteHandler(expense.id)}
+                    >
+                      Delete
+                    </Button>
+                    <Button
+                      variant="dark"
+                      size="sm"
+                      className={classes.expButton}
+                    >
+                      Edit
+                    </Button>
+                  </div>
+                </li>
+                <hr />
+              </div>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      {pages.length > 1 && (
+        <div className={classes.pagination}>
+          <Pagination>
+            <Pagination.First
+              onClick={() => pageHandler(pagedata.first_page)}
+            />
+            {pages.map((page) => (
+              <Pagination.Item onClick={() => pageHandler(page)} key={page}>
+                {page}
+              </Pagination.Item>
+            ))}
+            <Pagination.Last onClick={() => pageHandler(pagedata.last_page)} />
+          </Pagination>
+        </div>
+      )}
     </React.Fragment>
   );
 };
