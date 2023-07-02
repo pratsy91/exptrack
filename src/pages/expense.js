@@ -68,8 +68,8 @@ const Expenses = () => {
   const premiumHandler = async (event) => {
     const token = getToken();
     const response = await fetch(
-      "http://localhost:5000/purchase/premiummembership",
-      { headers: { "Authorization": token } }
+      "http://3.110.49.218:5000/purchase/premiummembership",
+      { headers: { Authorization: token } }
     );
     console.log(response);
     const data = await response.json();
@@ -80,12 +80,12 @@ const Expenses = () => {
       handler: async function (response) {
         console.log(response);
         const res = await fetch(
-          "http://localhost:5000/purchase/updatetransactionstatus",
+          "http://3.110.49.218:5000/purchase/updatetransactionstatus",
           {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
-             "Authorization": token,
+              Authorization: token,
             },
             body: JSON.stringify({
               order_id: options.order_id,

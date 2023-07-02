@@ -77,7 +77,7 @@ export async function authAction({ request }) {
   let url = "";
 
   if (mode === "login") {
-    url = "http://localhost:5000/user/login";
+    url = "http://3.110.49.218:5000/user/login";
     const response = await fetch(url, {
       method: "POST",
       headers: {
@@ -94,7 +94,7 @@ export async function authAction({ request }) {
     localStorage.setItem("token", token);
     return redirect("/");
   } else {
-    url = "http://localhost:5000/user/signup";
+    url = "http://3.110.49.218:5000/user/signup";
     const response = await fetch(url, {
       method: "POST",
       headers: {

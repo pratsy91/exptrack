@@ -32,12 +32,12 @@ export const postExpense = (expense) => {
     const sendRequest = async () => {
       const token = getToken();
       const response = await fetch(
-        "http://localhost:5000/expense/add-expense",
+        "http://3.110.49.218:5000/expense/add-expense",
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            "Authorization": token,
+            Authorization: token,
           },
           body: JSON.stringify(expense),
         }
@@ -61,10 +61,10 @@ export const getExpense = (page) => {
     const token = getToken();
     const sendRequest = async () => {
       const response = await fetch(
-        `http://localhost:5000/expense/get-expense/?page=${page}`,
+        `http://3.110.49.218:5000/expense/get-expense/?page=${page}`,
         {
           headers: {
-           "Authorization": token,
+            Authorization: token,
           },
         }
       );
@@ -88,10 +88,10 @@ export const delExpense = (id) => {
     const sendRequest = async () => {
       const token = getToken();
       const response = await fetch(
-        `http://localhost:5000/expense/del-expense/${id}`,
+        `http://3.110.49.218:5000/expense/del-expense/${id}`,
         {
           headers: {
-           "Authorization": token,
+            Authorization: token,
           },
         }
       );
@@ -115,10 +115,10 @@ export const getLeaders = (expense) => {
     const token = getToken();
     const sendRequest = async () => {
       const response = await fetch(
-        "http://localhost:5000/premium/showLeaderBoard",
+        "http://3.110.49.218:5000/premium/showLeaderBoard",
         {
           headers: {
-           "Authorization": token,
+            Authorization: token,
           },
         }
       );
