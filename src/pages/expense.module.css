@@ -89,6 +89,7 @@
 
 .pagination {
   display: inline-block;
+  margin-bottom: 5rem;
 }
 
 @media (max-width: 37.5rem) {
